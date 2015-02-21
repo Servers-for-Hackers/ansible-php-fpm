@@ -35,6 +35,8 @@
 
 - name: Add PHP-FPM PHP Configuration
   template: src=php.ini dest=/etc/php5/fpm/php.ini owner=root group=root
+  notify:
+    - Restart PHP-FPM
 
 - name: Add Default Resource Pool
   when: phpinstall|success
