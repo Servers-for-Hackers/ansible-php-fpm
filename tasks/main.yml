@@ -21,6 +21,21 @@
   notify:
     - Start PHP-FPM
 
+- name: Create and Set Permissions of Chroot Directory
+  file: path=/var/www state=directory owner=www-data group=www-data
+
+- name: Create and Set Permissions of Chroot Log Directory
+  file: path=/var/www/log state=directory owner=www-data group=www-data
+
+- name: Create and Set Permissions Chroot TMP Directory
+  file: path=/var/www/tmp state=directory owner=www-data group=www-data
+
+- name: Create and Set Permissions Chroot Session Directory
+  file: path=/var/www/tmp/sessions state=directory owner=www-data group=www-data
+
+- name: Add PHP-FPM PHP Configuration
+  template: src=php.ini dest=/etc/php5/fpm/php.ini owner=root group=root
+
 - name: Add Default Resource Pool
   when: phpinstall|success
   template: src=www.conf.j2 dest=/etc/php5/fpm/pool.d/www.conf owner=root group=root mode=644

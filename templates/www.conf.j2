@@ -14,7 +14,7 @@
 ; When not set, the global prefix (or /usr) applies instead.
 ; Note: This directive can also be relative to the global prefix.
 ; Default Value: none
-;prefix = /path/to/pools/$pool
+prefix = /var/www
 
 ; Unix user/group of processes
 ; Note: The user is mandatory. If the group is not set, the default user's group
@@ -30,7 +30,7 @@ group = www-data
 ;                            specific port;
 ;   '/path/to/unix/socket' - to listen on a unix socket.
 ; Note: This value is mandatory.
-listen = /var/run/php5-fpm.sock
+listen = 127.0.0.1:9000
 
 ; Set listen(2) backlog.
 ; Default Value: 65535 (-1 on FreeBSD and OpenBSD)
@@ -335,7 +335,7 @@ ping.path = /fpmping
 ;       possible. However, all PHP paths will be relative to the chroot
 ;       (error_log, sessions.save_path, ...).
 ; Default Value: not set
-;chroot =
+chroot = $prefix
 
 ; Chdir to this directory at the start.
 ; Note: relative path can be used.
@@ -371,9 +371,9 @@ chdir = /
 ; Default Value: clean env
 ;env[HOSTNAME] = $HOSTNAME
 ;env[PATH] = /usr/local/bin:/usr/bin:/bin
-;env[TMP] = /tmp
-;env[TMPDIR] = /tmp
-;env[TEMP] = /tmp
+env[TMP] = /tmp
+env[TMPDIR] = /tmp
+env[TEMP] = /tmp
 
 ; Additional php.ini defines, specific to this pool of workers. These settings
 ; overwrite the values previously defined in the php.ini. The directives are the
@@ -399,3 +399,6 @@ chdir = /
 ;php_admin_value[error_log] = /var/log/fpm-php.www.log
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
+php_admin_value[error_log] = log/fpm-php.www.log
+php_admin_value[session.save_path] = tmp/sessions
+php_admin_value[upload_tmp_dir] = tmp
