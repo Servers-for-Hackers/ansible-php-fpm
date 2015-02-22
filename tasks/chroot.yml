@@ -26,11 +26,16 @@
 - name: Create Chroot /dev
   file: path=/var/www/dev state=directory owner=www-data group=www-data
 
+# Reference: http://www.cyberciti.biz/faq/howto-run-nginx-in-a-chroot-jail/
+
 - name: Mknod /dev/null to Chroot
   shell: /bin/mknod -m 0444 /var/www/dev/null c 1 3
+  ignore_errors: yes
 
 - name: Mknod /dev/random to Chroot
   shell: /bin/mknod -m 0444 /var/www/dev/random c 1 8
+  ignore_errors: yes
 
 - name: Mknod /dev/urandom to Chroot
   shell: /bin/mknod -m 0444 /var/www/dev/urandom c 1 9
+  ignore_errors: yes
