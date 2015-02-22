@@ -1,6 +1,6 @@
 ---
 - name: Add PHP Repository
-  apt_repository: repo='ppa:ondrej/php5' state=present
+  apt_repository: repo='ppa:ondrej/php5-5.6' state=present
   register: ppaphp
 
 - name: Install PHP and PHP-FPM
@@ -21,20 +21,23 @@
   notify:
     - Start PHP-FPM
 
-- name: Create and Set Permissions of Chroot Directory
-  file: path=/var/www state=directory owner=www-data group=www-data
+- name: Install Composer
+  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer
 
-- name: Create and Set Permissions of Chroot Log Directory
-  file: path=/var/www/log state=directory owner=www-data group=www-data
+- name: Rename composer.phar to composer
+  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
 
-- name: Create and Set Permissions Chroot TMP Directory
-  file: path=/var/www/tmp state=directory owner=www-data group=www-data
+- name: Make Composer Executable
+  shell: chmod a+x /usr/local/bin/composer
 
-- name: Create and Set Permissions Chroot Session Directory
-  file: path=/var/www/tmp/sessions state=directory owner=www-data group=www-data
+- name: Composer Self Update
+  shell: composer self-update
+
+- name: Chroot Settings
+  include: chroot.yml
 
 - name: Add PHP-FPM PHP Configuration
-  template: src=php.ini dest=/etc/php5/fpm/php.ini owner=root group=root
+  template: src=php.ini.j2 dest=/etc/php5/fpm/php.ini owner=root group=root
   notify:
     - Restart PHP-FPM
 
